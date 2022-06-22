@@ -34,12 +34,12 @@ class HomePage:
         return self.driver.find_element(By.CSS_SELECTOR, "div.gauge-speed-needle").get_attribute("style")
 
     def wait_for_ping(self):
-        # Wait for ping to be completed
+        # Wait for ping to be completed ("opacity: 0;" = complete)
         self.wait.until(EC.text_to_be_present_in_element_attribute(
             (By.CSS_SELECTOR, "div.gauge-group-ping"), "style", "opacity: 0;"))
 
     def wait_for_computing_download_upload(self):
-        # Wait for download and upload to be completed
+        # Wait for download and upload to be completed ("opacity: 0;" = complete)
         self.wait.until(EC.text_to_be_present_in_element_attribute(
             (By.CSS_SELECTOR, "gauge-group-speed"), "style", "opacity: 0;"))
 
