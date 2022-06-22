@@ -3,7 +3,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from os import path
 import csv
-from time import sleep
 
 from Selenium_Classes.HomePage import HomePage
 
