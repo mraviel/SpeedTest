@@ -1,4 +1,4 @@
-import unittest
+from unittest import TestCase
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from os import path
@@ -7,34 +7,44 @@ from time import sleep
 from Selenium_Classes.HomePage import HomePage
 
 
-# PATH
-Drivers_folder = path.join(path.dirname(__file__), 'Drivers')
-chrome_driver_path = path.join(path.join(Drivers_folder, 'chromedriver'))
+class TestSpeedtest(TestCase):
+    """ Test speedtest site """
 
-service_chrome = Service(chrome_driver_path)
+    def setUp(self):
 
-driver = webdriver.Chrome(service=service_chrome)
+        # PATH
+        Drivers_folder = path.join(path.dirname(__file__), 'Drivers')
+        chrome_driver_path = path.join(path.join(Drivers_folder, 'chromedriver'))
 
-#driver.set_page_load_timeout(10)
+        service_chrome = Service(chrome_driver_path)
 
-driver.get("https://www.speedtest.net/")
+        self.driver = webdriver.Chrome(service=service_chrome)
+        # driver.set_page_load_timeout(10)
+        self.driver.get("https://www.speedtest.net/")
 
+        self.driver.maximize_window()
+        self.driver.implicitly_wait(10)
 
-driver.execute_script("window.stop();")
+        self.home_page = HomePage(self.driver)
 
-driver.maximize_window()
-driver.implicitly_wait(10)
+    def test_1(self):
 
-home_page = HomePage(driver)
-home_page.click_go_button()
+        self.home_page.click_go_button()
+        ping = self.home_page.ping()
+        print(f"Ping: {ping}")
 
-print(home_page.ping())
+        while True:
+            if "opacity: 0;" in self.home_page.speed_handle_opacity_style():
+                download_mbps = self.home_page.download_Mbps()
+                upload_mbps = self.home_page.upload_Mbps()
+                print(f"Download Mbps: {download_mbps} \nUpload Mbps: {upload_mbps}")
+                break
 
-while True:
-    if "opacity: 0;" in home_page.speed_handle_opacity_style():
-        print(home_page.download_Mbps())
-        print(home_page.upload_Mbps())
-        break
+        # Verify the data have content (Not None or Empty)
+        for data in [ping, download_mbps, upload_mbps]:
+            self.assertTrue(data)
 
+    def tearDown(self):
 
-driver.close()
+        # Close the driver
+        self.driver.close()
