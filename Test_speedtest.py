@@ -1,4 +1,5 @@
 from unittest import TestCase
+import unittest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from os import path
@@ -66,3 +67,7 @@ class TestSpeedtest(TestCase):
 
         # Close the driver
         self.driver.close()
+
+
+if __name__ == '__main__':
+    unittest.main()
