@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.common.exceptions import TimeoutException
 from os import path
 import csv
 import platform
@@ -19,9 +20,14 @@ chrome_driver_path = path.join(path.join(Drivers_folder, chromedriver[platform.s
 service_chrome = Service(chrome_driver_path)
 
 driver = webdriver.Chrome(service=service_chrome)
+driver.set_page_load_timeout(15)  # Set max time for page to load
 
+# Load the page until timeout than start testing
 print("Loading Page...")
-driver.get("https://www.speedtest.net/")
+try:
+    driver.get("https://www.speedtest.net/")
+except TimeoutException:
+    pass
 
 driver.maximize_window()
 driver.implicitly_wait(10)
