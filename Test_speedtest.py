@@ -1,6 +1,7 @@
 from unittest import TestCase
 import unittest
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.service import Service
 from os import path
 import csv
@@ -26,9 +27,14 @@ class TestSpeedtest(TestCase):
         service_chrome = Service(chrome_driver_path)
 
         self.driver = webdriver.Chrome(service=service_chrome)
+        self.driver.set_page_load_timeout(15)  # Set max time for page to load
 
+        # Load the page until timeout than start testing
         print("Loading Page...")
-        self.driver.get("https://www.speedtest.net/")
+        try:
+            self.driver.get("https://www.speedtest.net/")
+        except TimeoutException:
+            pass
 
         self.driver.maximize_window()
         self.driver.implicitly_wait(10)
