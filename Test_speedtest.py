@@ -2,13 +2,19 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from os import path
 import csv
+import platform
 
 from Selenium_Classes.HomePage import HomePage
 
 
+# Which chrome driver to use
+chromedriver = {'Darwin': "chromedriver_m1_mac",
+                'Linux': "chromedriver_Linux64",
+                'Windows': 'chromedriver_Win32.exe'}
+
 # PATH
-Drivers_folder = path.join(path.dirname(__file__), 'Drivers')
-chrome_driver_path = path.join(path.join(Drivers_folder, 'chromedriver'))
+Drivers_folder = path.join(path.dirname(__file__), 'Drivers_v102.0.5005')
+chrome_driver_path = path.join(path.join(Drivers_folder, chromedriver[platform.system()]))
 
 service_chrome = Service(chrome_driver_path)
 
